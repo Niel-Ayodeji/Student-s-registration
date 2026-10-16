@@ -1,0 +1,271 @@
+{
+  "name": "Students registration",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Student Registration",
+        "formDescription": "Please fill in your details to register",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone Number",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Course/Program",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Register",
+          "path": "student-registration",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Thank you! Your registration has been received."
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "69729fd3-68ee-40ea-9527-b7ae99721f6a",
+      "name": "On form submission",
+      "webhookId": "c5bb4bbd-be94-41f1-ab63-5328e90d4f81"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1txtEUrzRYgowD69m2xVzogOtTDaDOkP8AkamCOIOBEc",
+          "mode": "list",
+          "cachedResultName": "Vibezz School",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1txtEUrzRYgowD69m2xVzogOtTDaDOkP8AkamCOIOBEc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1txtEUrzRYgowD69m2xVzogOtTDaDOkP8AkamCOIOBEc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Registration ID": "={{ $json['Registration ID'] }}",
+            "Registered at": "={{ $json['Registered at'] }}",
+            "Full Name": "={{ $json['Full Name'] }}",
+            "Email": "={{ $json.Email }}",
+            "Course": "={{ $json.Course }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Registration ID",
+              "displayName": "Registration ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Registered at",
+              "displayName": "Registered at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Course",
+              "displayName": "Course",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "id": "5db1ad9a-f40d-4d93-83e4-ecf1c7e3e65d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rTkguyIDRxu10cp2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "danieladesina70@gmail.com",
+        "subject": "=New student registration:{{ $('Organize Student Details').item.json['Full Name'] }}{{ $('Organize Student Details').item.json.Email }}{{ $('Organize Student Details').item.json.Course }}",
+        "message": "=<h3>New student registration</h3>\n<p><b>Name:</b> {{ $(\"Organize Student Details\").item.json[\"Full Name\"] }}<br>\n<b>Email:</b> {{ $(\"Organize Student Details\").item.json.Email }}<br>\n<b>Course:</b> {{ $(\"Organize Student Details\").item.json.Course }}<br>.",
+        "options": {
+          "appendAttribution": "= $(\"Organize Student Details\")"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "3ef60a19-b9d5-4a82-878d-f1e9cf1980f4",
+      "name": "Send a message",
+      "webhookId": "35e5f76b-119e-4c09-9fad-faf3fe6859e2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SDAqHX9vO1GVKYf9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec7cd8b7-b0d4-4932-ba97-de27bc72b0c6",
+              "name": "=Registration ID",
+              "value": "={{ \"STU-\" + $now.toFormat(\"yyyyMMddHHmmss\") + \"-\" + $execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "1d0cfc92-b83c-4bed-aa23-3a56d5938934",
+              "name": "=Registered at",
+              "value": "={{ DateTime.fromISO($json.submittedAt).setZone($workflow.timezone || \"Africa/Lagos\").toFormat(\"yyyy-MM-dd HH:mm\") }}",
+              "type": "string"
+            },
+            {
+              "id": "1b5a58cf-ca82-46eb-abc5-471692670c8a",
+              "name": "=Full Name",
+              "value": "={{ $json['Full Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "86d49a03-6be7-4a04-ab2d-66736d8e617a",
+              "name": "=Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "262f8c71-b37d-4f02-bde5-64042d5b263e",
+              "name": "=Course",
+              "value": "={{ $json['Course/Program'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "567e487e-cff8-4adf-bee1-1807bcf6c18d",
+      "name": "Organize Student Details"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Organize Student Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organize Student Details": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ac41c08e-d4ee-49c7-a766-2b1c116d212c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd54eedd91bfe008f043751d0377448b950c7a35ff81ba70b83aadc486b14928"
+  },
+  "nodeGroups": [],
+  "id": "35CYFdW9Q5bP5yej",
+  "tags": []
+}
